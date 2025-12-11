@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MO Roofing - Free Roof Inspections & Storm Damage Repair</title>
-     <link rel="icon" type="image/png" href="images/M.png" />
+    <link rel="icon" type="image/png" href="images/M.png" />
     <link rel="stylesheet" href="https://storage.googleapis.com/facelessbroll_website/roofing.jpeg">
     <style>
         :root {
@@ -156,17 +156,19 @@
         }
         
         .hero-image {
-            flex: 1;
+            flex: 1.4; /* 🔥 Make image side larger */
             display: flex;
             justify-content: center;
             position: relative;
         }
         
         .hero-image img {
-            max-width: 100%;
+            width: 100%;
+            max-width: 900px; /* 🔥 Bigger image */
             height: auto;
             animation: float 6s ease-in-out infinite;
             border-radius: 16px;
+            object-fit: cover;
         }
         
         @keyframes float {
