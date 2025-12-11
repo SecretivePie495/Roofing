@@ -1,1090 +1,1025 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>UdoXLaith | 3D Lead Generation & Nurturing</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Font & Basic Styles -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html, body {
-      height: 100%;
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #020617;
-      color: #e5e7eb;
-      scroll-behavior: smooth;
-    }
-
-    body {
-      position: relative;
-      overflow-x: hidden;
-    }
-
-    /* 3D canvas */
-    #bg-canvas {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      display: block;
-      z-index: -1;
-    }
-
-    /* Content Layout */
-    .page-wrapper {
-      position: relative;
-      z-index: 10;
-    }
-
-    section {
-      min-height: 100vh;
-      padding: 4rem 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 1120px;
-      margin: 0 auto;
-    }
-
-    /* HERO */
-    .hero {
-      position: relative;
-      text-align: left;
-      color: #f9fafb;
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 3rem;
-      align-items: center;
-    }
-
-    @media (max-width: 900px) {
-      .hero-grid {
-        grid-template-columns: 1fr;
-        text-align: center;
-      }
-      .hero-cta-group {
-        justify-content: center;
-      }
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.25rem 0.8rem;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #7dd3fc;
-      margin-bottom: 1.5rem;
-    }
-
-    .badge-dot {
-      width: 0.45rem;
-      height: 0.45rem;
-      border-radius: 999px;
-      background: #22c55e;
-      box-shadow: 0 0 12px rgba(34, 197, 94, 0.9);
-    }
-
-    .hero-title {
-      font-size: clamp(2.5rem, 4vw, 3.5rem);
-      line-height: 1.1;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 1.25rem;
-    }
-
-    .hero-title span.highlight {
-      background: linear-gradient(135deg, #0ea5e9, #22c55e);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .hero-subtitle {
-      font-size: 1.05rem;
-      color: #9ca3af;
-      max-width: 32rem;
-      margin-bottom: 1.75rem;
-    }
-
-    .hero-cta-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      align-items: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .btn-primary {
-      padding: 0.85rem 1.7rem;
-      border-radius: 999px;
-      border: none;
-      outline: none;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.95rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: linear-gradient(135deg, #0ea5e9, #22c55e);
-      color: #0b1120;
-      box-shadow: 0 20px 45px rgba(56, 189, 248, 0.35);
-      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
-    }
-
-    .btn-primary:hover:not(:disabled) {
-      transform: translateY(-1px);
-      filter: brightness(1.05);
-      box-shadow: 0 20px 55px rgba(56, 189, 248, 0.45);
-    }
-
-    .btn-primary:disabled {
-      cursor: default;
-    }
-
-    .btn-secondary {
-      padding: 0.8rem 1.3rem;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      background: rgba(15, 23, 42, 0.7);
-      color: #e5e7eb;
-      cursor: pointer;
-      font-size: 0.9rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
-    }
-
-    .btn-secondary:hover {
-      background: rgba(15, 23, 42, 0.95);
-      border-color: rgba(148, 163, 184, 0.9);
-      transform: translateY(-1px);
-    }
-
-    .hero-trust {
-      font-size: 0.8rem;
-      color: #6b7280;
-    }
-
-    .hero-metric-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2rem;
-      font-size: 0.85rem;
-      margin-top: 1rem;
-    }
-
-    .metric {
-      display: flex;
-      flex-direction: column;
-      gap: 0.1rem;
-    }
-
-    .metric span.value {
-      font-weight: 700;
-      color: #e5e7eb;
-      font-size: 1rem;
-    }
-
-    .metric span.label {
-      color: #6b7280;
-      font-size: 0.8rem;
-    }
-
-    /* Right side hero card */
-    .hero-panel {
-      position: relative;
-      border-radius: 1.5rem;
-      padding: 1.5rem;
-      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.25), transparent 50%),
-                  linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.96));
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      box-shadow:
-        0 20px 40px rgba(15, 23, 42, 0.9),
-        0 0 60px rgba(56, 189, 248, 0.15);
-      backdrop-filter: blur(16px);
-      max-width: 430px;
-      margin-left: auto;
-    }
-
-    @media (max-width: 900px) {
-      .hero-panel {
-        margin: 2rem auto 0;
-      }
-    }
-
-    .panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-      font-size: 0.9rem;
-    }
-
-    .pill {
-      padding: 0.25rem 0.7rem;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      font-size: 0.75rem;
-      color: #9ca3af;
-    }
-
-    .panel-title {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: #e5e7eb;
-    }
-
-    .pipeline {
-      margin-top: 0.75rem;
-      padding: 0.75rem;
-      border-radius: 1rem;
-      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.2), transparent 55%),
-                  rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(15, 23, 42, 0.9);
-    }
-
-    .stage-row {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      margin-bottom: 0.9rem;
-    }
-
-    .stage-icon {
-      width: 1.8rem;
-      height: 1.8rem;
-      border-radius: 999px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.5), rgba(15, 23, 42, 1));
-      color: #e0f2fe;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
-    }
-
-    .stage-text {
-      flex: 1;
-    }
-
-    .stage-text .label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #9ca3af;
-    }
-
-    .stage-text .value {
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: #e5e7eb;
-    }
-
-    .stage-metric {
-      font-size: 0.8rem;
-      color: #22c55e;
-      white-space: nowrap;
-    }
-
-    .bar-bg {
-      margin-top: 0.4rem;
-      width: 100%;
-      height: 0.25rem;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 1);
-      overflow: hidden;
-    }
-
-    .bar-fill {
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, #0ea5e9, #22c55e);
-      width: var(--fill, 40%);
-    }
-
-    .panel-footer {
-      margin-top: 1rem;
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.8rem;
-      color: #9ca3af;
-    }
-
-    .spark {
-      font-size: 0.8rem;
-      color: #a5b4fc;
-    }
-
-    /* SECTIONS */
-    .section-label {
-      font-size: 0.75rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #6b7280;
-      margin-bottom: 0.75rem;
-    }
-
-    .section-title {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      color: #e5e7eb;
-    }
-
-    .section-subtitle {
-      font-size: 0.98rem;
-      color: #9ca3af;
-      max-width: 36rem;
-      margin-bottom: 2rem;
-    }
-
-    .grid {
-      display: grid;
-      gap: 1.25rem;
-    }
-
-    @media (min-width: 800px) {
-      .grid-cols-3 {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-      .grid-cols-2 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-      .grid-cols-4 {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-      }
-    }
-
-    .card {
-      border-radius: 1rem;
-      border: 1px solid rgba(31, 41, 55, 0.9);
-      background: radial-gradient(circle at top left, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0.9));
-      padding: 1.2rem;
-      box-shadow: 0 18px 30px rgba(15, 23, 42, 0.8);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: -20%;
-      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.18), transparent 55%);
-      opacity: 0;
-      transition: opacity 0.2s ease;
-    }
-
-    .card:hover::before {
-      opacity: 1;
-    }
-
-    .card-title {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 0.4rem;
-      color: #e5e7eb;
-    }
-
-    .card-text {
-      font-size: 0.9rem;
-      color: #9ca3af;
-      line-height: 1.5;
-    }
-
-    .card-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      font-size: 0.75rem;
-      padding: 0.25rem 0.6rem;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(44, 62, 80, 0.9);
-      color: #a5b4fc;
-      margin-bottom: 0.8rem;
-    }
-
-    /* Timeline */
-    .timeline {
-      border-left: 1px dashed rgba(55, 65, 81, 1);
-      padding-left: 1.5rem;
-      margin-top: 1rem;
-    }
-
-    .timeline-item {
-      margin-bottom: 1rem;
-      position: relative;
-    }
-
-    .timeline-item::before {
-      content: "";
-      position: absolute;
-      left: -1.5rem;
-      top: 0.1rem;
-      width: 0.6rem;
-      height: 0.6rem;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #0ea5e9, #22c55e);
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
-    }
-
-    .timeline-label {
-      font-size: 0.75rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #6b7280;
-      margin-bottom: 0.1rem;
-    }
-
-    .timeline-title {
-      font-size: 0.95rem;
-      color: #e5e7eb;
-      font-weight: 500;
-    }
-
-    .timeline-text {
-      font-size: 0.85rem;
-      color: #9ca3af;
-    }
-
-    /* Contact section */
-    .contact-grid {
-      display: grid;
-      gap: 2rem;
-    }
-
-    @media (min-width: 880px) {
-      .contact-grid {
-        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-      }
-    }
-
-    .input-group {
-      margin-bottom: 0.9rem;
-    }
-
-    label {
-      display: block;
-      font-size: 0.8rem;
-      margin-bottom: 0.25rem;
-      color: #9ca3af;
-    }
-
-    input, textarea, select {
-      width: 100%;
-      padding: 0.7rem 0.8rem;
-      border-radius: 0.7rem;
-      border: 1px solid rgba(55, 65, 81, 1);
-      background: rgba(15, 23, 42, 0.9);
-      color: #e5e7eb;
-      font-size: 0.9rem;
-      outline: none;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-    }
-
-    input::placeholder,
-    textarea::placeholder {
-      color: #4b5563;
-    }
-
-    input:focus,
-    textarea:focus,
-    select:focus {
-      border-color: #0ea5e9;
-      box-shadow: 0 0 0 1px rgba(14, 165, 233, 0.4);
-      background: rgba(15, 23, 42, 1);
-    }
-
-    textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-
-    .small {
-      font-size: 0.75rem;
-      color: #6b7280;
-      margin-top: 0.4rem;
-    }
-
-    .footer {
-      padding: 1.5rem;
-      text-align: center;
-      font-size: 0.8rem;
-      color: #6b7280;
-      border-top: 1px solid rgba(31, 41, 55, 1);
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 1));
-    }
-
-    .footer a {
-      color: #0ea5e9;
-      text-decoration: none;
-    }
-
-    .footer a:hover {
-      text-decoration: underline;
-    }
-
-    /* Simple fade / slide-in animation */
-    .reveal {
-      opacity: 0;
-      transform: translateY(18px);
-      transition: all 0.5s ease-out;
-    }
-
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MO Roofing - Free Roof Inspections & Storm Damage Repair</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #00cec9;
+            --dark: #2d3436;
+            --light: #f5f6fa;
+            --accent: #fd79a8;
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        nav.scrolled {
+            padding: 1rem 5%;
+            background-color: rgba(255, 255, 255, 0.98);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .logo i {
+            margin-right: 0.5rem;
+            font-size: 2rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 2.5rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: var(--gradient);
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark);
+        }
+        
+        .cta-btn {
+            background: var(--gradient);
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(108, 94, 231, 0.3);
+        }
+        
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(108, 94, 231, 0.4);
+        }
+        
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 5%;
+            margin-top: 80px;
+        }
+        
+        .hero-content {
+            flex: 1;
+            padding-right: 2rem;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: #636e72;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+        
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .hero-image img {
+            max-width: 100%;
+            height: auto;
+            animation: float 6s ease-in-out infinite;
+            border-radius: 16px;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .secondary-btn {
+            background: transparent;
+            color: var(--primary);
+            padding: 0.7rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary);
+            cursor: pointer;
+        }
+        
+        .secondary-btn:hover {
+            background: rgba(108, 94, 231, 0.1);
+            transform: translateY(-3px);
+        }
+        
+        /* Sections */
+        .section {
+            padding: 6rem 5%;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+        
+        .section-title p {
+            color: #636e72;
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--gradient);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            color: white;
+            font-size: 1.8rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .feature-card p {
+            color: #636e72;
+            line-height: 1.6;
+        }
+        
+        /* About Section */
+        .about {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+        }
+        
+        .about-image {
+            flex: 1;
+            position: relative;
+        }
+        
+        .about-image img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .about-image:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px dashed var(--primary);
+            border-radius: 20px;
+            top: -20px;
+            left: -20px;
+            z-index: -1;
+        }
+        
+        .about-content {
+            flex: 1;
+        }
+        
+        .about-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+        
+        .about-content p {
+            color: #636e72;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-item h3 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-item p {
+            color: #636e72;
+            font-weight: 600;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            background-color: white;
+            padding: 6rem 5%;
+            text-align: center;
+        }
+        
+        .testimonial-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .testimonial-slide {
+            padding: 2rem;
+            display: none;
+            animation: fade 1s ease-in-out;
+        }
+        
+        @keyframes fade {
+            from {opacity: 0.4;}
+            to {opacity: 1;}
+        }
+        
+        .testimonial-slide.active {
+            display: block;
+        }
+        
+        .testimonial-content {
+            background: var(--light);
+            padding: 2rem;
+            border-radius: 15px;
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .testimonial-content:after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 20px 20px 0;
+            border-style: solid;
+            border-color: var(--light) transparent transparent;
+        }
+        
+        .testimonial-content p {
+            font-style: italic;
+            color: var(--dark);
+            line-height: 1.8;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .author-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            border: 3px solid var(--primary);
+        }
+        
+        .author-info h4 {
+            font-size: 1.2rem;
+            color: var(--dark);
+            margin-bottom: 0.3rem;
+        }
+        
+        .author-info p {
+            color: #636e72;
+            font-size: 0.9rem;
+        }
+        
+        .dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            background-color: #ddd;
+            border-radius: 50%;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .dot.active {
+            background: var(--primary);
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            background: var(--gradient);
+            color: white;
+            text-align: center;
+            padding: 5rem 5%;
+            border-radius: 20px;
+            margin: 0 5% 6rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-section:before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: -150px;
+            left: -150px;
+        }
+        
+        .cta-section:after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            bottom: -200px;
+            right: -200px;
+        }
+        
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .cta-section p {
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .cta-section .cta-btn {
+            background: white;
+            color: var(--primary);
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 5rem 5% 2rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-logo i {
+            margin-right: 0.5rem;
+            font-size: 2rem;
+        }
+        
+        .footer-about p {
+            color: #b2bec3;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .footer-links h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .footer-links h3:after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 3px;
+            background: var(--primary);
+            bottom: 0;
+            left: 0;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: #b2bec3;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+        
+        .newsletter input {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 30px;
+            border: none;
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .newsletter input::placeholder {
+            color: #b2bec3;
+        }
+        
+        .newsletter .cta-btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #b2bec3;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .hero-image {
+                align-items: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 5%;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 80%;
+                height: calc(100vh - 80px);
+                background: white;
+                flex-direction: column;
+                align-items: center;
+                padding: 2rem 0;
+                transition: all 0.3s ease;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            .nav-links li {
+                margin: 1rem 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 5rem;
+                height: auto;
+            }
+            
+            .hero-content {
+                padding-right: 0;
+                margin-bottom: 3rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .btn-group {
+                justify-content: center;
+            }
+            
+            .about {
+                flex-direction: column;
+            }
+            
+            .about-image {
+                margin-bottom: 3rem;
+            }
+            
+            .stats {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .cta-btn, .secondary-btn {
+                width: 100%;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .cta-section {
+                margin: 0 2% 6rem;
+                padding: 3rem 5%;
+            }
+            
+            .cta-section h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <!-- 3D Background -->
-  <canvas id="bg-canvas"></canvas>
-
-  <!-- Content -->
-  <div class="page-wrapper">
-    <!-- HERO -->
-    <section id="hero">
-      <div class="container hero">
-        <div class="hero-grid">
-          <div class="hero-left reveal">
-            <div class="badge">
-              <span class="badge-dot"></span>
-              <span>UdoXLaith • Lead Gen Engine</span>
-            </div>
-            <h1 class="hero-title">
-              Turn cold leads into
-              <span class="highlight">booked appointments</span>
-              on autopilot.
-            </h1>
-            <p class="hero-subtitle">
-              UdoXLaith designs, builds, and runs your lead generation & nurturing system so you stop chasing DMs and start taking calls from
-              <strong>warm buyers</strong>.
-            </p>
-            <div class="hero-cta-group">
-              <a href="#contact" class="btn-primary">
-                Book a 3D Pipeline Demo
-                <span>↗</span>
-              </a>
-              <a href="#how-it-works" class="btn-secondary">
-                See how the system works
-              </a>
-            </div>
-            <div class="hero-trust">
-              <div>✅ Ideal for agencies, medspas, home services, and local businesses.</div>
-              <div class="hero-metric-row">
-                <div class="metric">
-                  <span class="value">3–7x</span>
-                  <span class="label">More conversations from the same leads</span>
-                </div>
-                <div class="metric">
-                  <span class="value">24/7</span>
-                  <span class="label">Nurturing via SMS, email, and DMs</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="hero-right reveal">
-            <div class="hero-panel">
-              <div class="panel-header">
-                <span class="panel-title">Live Pipeline • UdoXLaith OS</span>
-                <span class="pill">Leads flowing in real-time</span>
-              </div>
-
-              <div class="pipeline">
-                <div class="stage-row">
-                  <div class="stage-icon">👁‍🗨</div>
-                  <div class="stage-text">
-                    <div class="label">Stage 1 • Cold Traffic</div>
-                    <div class="value">3,842 visitors hit your landing pages</div>
-                    <div class="bar-bg">
-                      <div class="bar-fill" style="--fill: 100%;"></div>
-                    </div>
-                  </div>
-                  <div class="stage-metric">100%</div>
-                </div>
-
-                <div class="stage-row">
-                  <div class="stage-icon">📨</div>
-                  <div class="stage-text">
-                    <div class="label">Stage 2 • Leads Captured</div>
-                    <div class="value">728 opt-ins via forms, DMs & SMS</div>
-                    <div class="bar-bg">
-                      <div class="bar-fill" style="--fill: 46%;"></div>
-                    </div>
-                  </div>
-                  <div class="stage-metric">+12.9% CR</div>
-                </div>
-
-                <div class="stage-row">
-                  <div class="stage-icon">🤖</div>
-                  <div class="stage-text">
-                    <div class="label">Stage 3 • Nurturing & Follow-Up</div>
-                    <div class="value">AI + human workflows warm up every lead</div>
-                    <div class="bar-bg">
-                      <div class="bar-fill" style="--fill: 28%;"></div>
-                    </div>
-                  </div>
-                  <div class="stage-metric">78% replied</div>
-                </div>
-
-                <div class="stage-row">
-                  <div class="stage-icon">📆</div>
-                  <div class="stage-text">
-                    <div class="label">Stage 4 • Booked Appointments</div>
-                    <div class="value">71 sales-ready calls booked this month</div>
-                    <div class="bar-bg">
-                      <div class="bar-fill" style="--fill: 18%;"></div>
-                    </div>
-                  </div>
-                  <div class="stage-metric">9.7% of leads</div>
-                </div>
-              </div>
-
-              <div class="panel-footer">
-                <span class="spark">⚡ Powered by UdoXLaith lead flows</span>
-                <span>Updated live as your system runs.</span>
-              </div>
-            </div>
-          </div>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="logo">
+            <i class="fas fa-house-damage"></i>
+            <span>MO Roofing</span>
         </div>
-      </div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#features">Services</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#testimonials">Reviews</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <button class="cta-btn">Get Free Inspection</button>
+        <div class="mobile-menu-btn" id="menuBtn">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Free Roof Inspections & Fast Storm-Damage Repair</h1>
+            <p>MO Roofing helps homeowners with complimentary roof checks, storm-damage assessments, and professional repairs. If your roof was hit by wind or hail, we'll inspect it — free of charge — and help you repair or replace it fast.</p>
+            <div class="btn-group">
+                <button class="cta-btn">Get a Free Roof Inspection</button>
+                <button class="secondary-btn">See Our Work</button>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="https://images.unsplash.com/photo-1597004894422-6f80f2d09b22?auto=format&fit=crop&w=1100&q=80" alt="Roofing Contractor Repairing Shingles">
+        </div>
     </section>
 
-    <!-- HOW IT WORKS -->
-    <section id="how-it-works">
-      <div class="container reveal">
-        <div class="section-label">How it works</div>
-        <h2 class="section-title">Your lead engine in four simple stages.</h2>
-        <p class="section-subtitle">
-          We plug into your existing traffic (or build it with you), capture every hand-raise,
-          then nurture, qualify, and book calls — all inside a system that runs 24/7.
-        </p>
-
-        <div class="grid grid-cols-4 grid-cols-2">
-          <div class="card">
-            <div class="card-tag">Stage 1 • Capture</div>
-            <div class="card-title">Leads from everywhere</div>
-            <p class="card-text">
-              Landing pages, Instagram DMs, TikTok, website forms, call-back widgets — we centralize your inbound
-              attention so every potential buyer becomes a trackable lead in the UdoXLaith OS.
-            </p>
-          </div>
-          <div class="card">
-            <div class="card-tag">Stage 2 • Nurture</div>
-            <div class="card-title">Multi-channel follow-up</div>
-            <p class="card-text">
-              Automated but human-style follow-ups across SMS, email, and DMs to open conversations, answer basic
-              objections, send social proof, and keep you top-of-mind — without you typing a word.
-            </p>
-          </div>
-          <div class="card">
-            <div class="card-tag">Stage 3 • Qualify</div>
-            <div class="card-title">Filter out the tire-kickers</div>
-            <p class="card-text">
-              Simple qualifying flows ask the right questions to segment hot vs. cold leads, so your calendar fills
-              with people who are ready, able, and willing to move.
-            </p>
-          </div>
-          <div class="card">
-            <div class="card-tag">Stage 4 • Book</div>
-            <div class="card-title">Calendar full, inbox quiet</div>
-            <p class="card-text">
-              Once someone is qualified, the system routes them to the right calendar or closer. You get Slack / email
-              alerts with context, not random “are you free?” messages.
-            </p>
-          </div>
+    <!-- Services / Features Section -->
+    <section class="section" id="features">
+        <div class="section-title">
+            <h2>Our Roofing Services</h2>
+            <p>We offer thorough inspections and high-quality roof repairs to keep your home protected after storms or age-related wear.</p>
         </div>
-      </div>
-    </section>
-
-    <!-- 3D-INSPIRED PIPELINE / PROCESS -->
-    <section id="pipeline">
-      <div class="container reveal">
-        <div class="section-label">3D Pipeline View</div>
-        <h2 class="section-title">Imagine your leads as a 3D flow field.</h2>
-        <p class="section-subtitle">
-          The background you’re seeing is a live 3D scene: each glowing node represents a lead,
-          moving through a pipeline from cold traffic to booked calls. That’s exactly how we think
-          about your growth — as a system, not random one-off campaigns.
-        </p>
-
-        <div class="grid grid-cols-2">
-          <div class="card">
-            <div class="card-title">What we build for you</div>
-            <ul class="card-text" style="list-style: none; padding-left: 0; margin-top: 0.5rem;">
-              <li>• High-converting landing experience or lead capture flow</li>
-              <li>• Automated SMS & email sequences tailored to your offer</li>
-              <li>• Unified inbox & pipeline tracking (no more lost leads)</li>
-              <li>• Appointment booking flows & reminder sequences</li>
-              <li>• Reporting so you can see every step of the journey</li>
-            </ul>
-          </div>
-          <div class="card">
-            <div class="card-title">From “I clicked” to “Let’s talk”</div>
-            <div class="timeline">
-              <div class="timeline-item">
-                <div class="timeline-label">T+0 min</div>
-                <div class="timeline-title">Lead opts-in or DM’s you</div>
-                <div class="timeline-text">System tags the lead, logs their source, and sends a warm, on-brand welcome.</div>
-              </div>
-              <div class="timeline-item">
-                <div class="timeline-label">T+3–15 min</div>
-                <div class="timeline-title">Follow-up sequence begins</div>
-                <div class="timeline-text">Questions, social proof, and micro-commitments designed to spark replies.</div>
-              </div>
-              <div class="timeline-item">
-                <div class="timeline-label">T+24–72 hrs</div>
-                <div class="timeline-title">Nurturing & sorting</div>
-                <div class="timeline-text">Hot leads move toward your calendar; colder leads stay in a long-term nurture track.</div>
-              </div>
-              <div class="timeline-item">
-                <div class="timeline-label">T+3–7 days</div>
-                <div class="timeline-title">Booked appointments in your calendar</div>
-                <div class="timeline-text">You show up to calls with context and intent, not random time-wasters.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CONTACT / CALL TO ACTION -->
-    <section id="contact">
-      <div class="container reveal">
-        <div class="section-label">Work with UdoXLaith</div>
-        <h2 class="section-title">Let’s build your lead engine.</h2>
-        <p class="section-subtitle">
-          Tell us a bit about your offer, price point, and how you’d like your follow-up to feel.
-          We’ll map out a lead generation & nurturing system tailored to your business and walk you through it live.
-        </p>
-
-        <div class="contact-grid">
-          <div>
-            <form id="contact-form">
-              <div class="input-group">
-                <label for="name">Name</label>
-                <input id="name" type="text" placeholder="Udo Onyekwere" />
-              </div>
-              <div class="input-group">
-                <label for="email">Email</label>
-                <input id="email" type="email" placeholder="you@example.com" />
-              </div>
-              <div class="input-group">
-                <label for="business">Business / Offer</label>
-                <input id="business" type="text" placeholder="Medspa, agency, home services, coaching, etc." />
-              </div>
-
-              <!-- Follow-up frequency -->
-              <div class="input-group">
-                <label for="frequency">Follow-up frequency</label>
-                <select id="frequency">
-                  <option value="daily">Daily</option>
-                  <option value="every_3_days">Every 3 days</option>
-                  <option value="weekly">Once a week</option>
-                </select>
-                <div class="small">
-                  How often should we follow up with your leads?
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-search"></i>
                 </div>
-              </div>
-
-              <button type="button" id="submit-btn" class="btn-primary">
-                Request pipeline strategy call
-                <span>→</span>
-              </button>
-              <div class="small">
-                No spam, no mass email lists — just a direct reply from the UdoXLaith team.
-              </div>
-            </form>
-          </div>
-
-          <div>
-            <div class="card">
-              <div class="card-tag">What to expect</div>
-              <div class="card-title">On your strategy call</div>
-              <p class="card-text" style="margin-bottom: 0.75rem;">
-                We’ll audit your current lead flow, walk you through a 3D pipeline view of your buyer journey, and show
-                you where automation can plug leaks and stack appointments.
-              </p>
-              <ul class="card-text" style="list-style: none; padding-left: 0;">
-                <li>• Identify where leads are falling through the cracks</li>
-                <li>• Design a simple nurture + booking flow</li>
-                <li>• Map it to tools you already use (or recommend new ones)</li>
-                <li>• Give you a clear “build with us” or “DIY” option</li>
-              </ul>
+                <h3>Free Roof Inspections</h3>
+                <p>We check for hail damage, missing shingles, soft spots, leaks, and storm impact — at no cost.</p>
             </div>
-            <div class="small" style="margin-top: 0.75rem;">
-              Prefer async? You can also send a loom and we’ll reply back with a tailored pipeline breakdown.
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-house-damage"></i>
+                </div>
+                <h3>Storm Damage Assessments</h3>
+                <p>Wind or hail hit your area? We’ll inspect your roof and provide a full damage report for your records.</p>
             </div>
-          </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <h3>Roof Repairs</h3>
+                <p>Fast, affordable repairs for leaks, shingles, flashing, vents, and structural issues.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <h3>Full Roof Replacement</h3>
+                <p>When damage is severe or roofs are aging, we provide high-quality full replacements.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <h3>Insurance Assistance</h3>
+                <p>We guide you through the insurance claim step-by-step to help you get approved quickly.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>Licensed & Insured</h3>
+                <p>MO Roofing is fully licensed, insured, and trusted by homeowners across the Dallas–Fort Worth area.</p>
+            </div>
         </div>
-      </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer class="footer">
-      <div>© <span id="year"></span> UdoXLaith. All rights reserved.</div>
-      <div style="margin-top: 0.25rem;">
-        Built as a 3D-inspired lead generation experience. Host this on Netlify and plug it into your automation stack.
-      </div>
+    <!-- About Section -->
+    <section class="section" id="about">
+        <div class="about">
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1621905252492-42c1f4706c7b?auto=format&fit=crop&w=1000&q=80" alt="Roofing Crew">
+            </div>
+            <div class="about-content">
+                <h2>Why Homeowners Choose MO Roofing</h2>
+                <p>MO Roofing provides honest inspections, transparent pricing, and reliable repair services for roofs damaged by storms, age, or leaks. Our goal is simple: keep your home protected with high-quality materials and expert workmanship.</p>
+                <p>Whether you're dealing with recent storm damage or routine wear, our team is ready to help — starting with a free inspection.</p>
+                <div class="stats">
+                    <div class="stat-item">
+                        <h3>1,200+</h3>
+                        <p>Roofs Inspected</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>98%</h3>
+                        <p>Homeowner Satisfaction</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>24/7</h3>
+                        <p>Emergency Service</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials" id="testimonials">
+        <div class="section-title">
+            <h2>What Our Homeowners Say</h2>
+            <p>Hear from homeowners who trusted MO Roofing after storms, leaks, and roof damage.</p>
+        </div>
+        <div class="testimonial-container">
+            <div class="testimonial-slide active">
+                <div class="testimonial-content">
+                    <p>"MO Roofing inspected our home after a hailstorm and found damage we didn’t even know was there. They handled everything quickly and professionally. Highly recommend!"</p>
+                </div>
+                <div class="testimonial-author">
+                    <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Sarah Johnson" class="author-image">
+                    <div class="author-info">
+                        <h4>Sarah Johnson</h4>
+                        <p>Homeowner - Carrollton, TX</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-slide">
+                <div class="testimonial-content">
+                    <p>"They repaired our roof the same week we called. Fast, honest, and affordable — the best roofing experience we’ve had."</p>
+                </div>
+                <div class="testimonial-author">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael Chen" class="author-image">
+                    <div class="author-info">
+                        <h4>Michael Chen</h4>
+                        <p>Homeowner - Dallas, TX</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-slide">
+                <div class="testimonial-content">
+                    <p>"Insurance approved our claim thanks to MO Roofing's detailed inspection report. Our new roof looks amazing and we feel protected again."</p>
+                </div>
+                <div class="testimonial-author">
+                    <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Elena Rodriguez" class="author-image">
+                    <div class="author-info">
+                        <h4>Elena Rodriguez</h4>
+                        <p>Homeowner - Plano, TX</p>
+                    </div>
+                </div>
+            </div>
+            <div class="dots">
+                <span class="dot active" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+                <span class="dot" onclick="currentSlide(3)"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2>Get a Free Roof Inspection Today</h2>
+        <p>Our roofing specialists will check for storm damage, leaks, missing shingles, and more — completely free. No obligation, no pressure. Just an honest assessment of your roof.</p>
+        <button class="cta-btn">Request Inspection</button>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-about">
+                <div class="footer-logo">
+                    <i class="fas fa-house-damage"></i>
+                    <span>MO Roofing</span>
+                </div>
+                <p>DFW’s trusted roofing specialists for inspections, repairs, and storm-damage restoration. We help homeowners protect what matters most — their home.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h3>Services</h3>
+                <ul>
+                    <li><a href="#features">Roof Inspections</a></li>
+                    <li><a href="#features">Storm Damage Repair</a></li>
+                    <li><a href="#features">Roof Replacement</a></li>
+                    <li><a href="#features">Insurance Assistance</a></li>
+                    <li><a href="#features">Emergency Roofing</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="#about">About MO Roofing</a></li>
+                    <li><a href="#about">Service Areas</a></li>
+                    <li><a href="#testimonials">Reviews</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#">Roofing FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-links newsletter">
+                <h3>Stay Updated</h3>
+                <p>Get tips on roof maintenance, storm prep, and insurance advice straight to your inbox.</p>
+                <input type="email" placeholder="Your email address">
+                <button class="cta-btn">Subscribe</button>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 MO Roofing. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+        </div>
     </footer>
-  </div>
 
-  <!-- Three.js -->
-  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-
-  <script>
-    // Set year in footer
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // ----- 3D BACKGROUND SCENE -----
-    const canvas = document.getElementById('bg-canvas');
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(window.innerWidth, window.innerHeight);
-
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x020617);
-
-    const camera = new THREE.PerspectiveCamera(
-      60,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      100
-    );
-    camera.position.set(0, 0, 9);
-
-    // Lights
-    const light1 = new THREE.PointLight(0x38bdf8, 2, 40);
-    light1.position.set(6, 4, 6);
-    scene.add(light1);
-
-    const light2 = new THREE.PointLight(0x22c55e, 1.6, 40);
-    light2.position.set(-6, -4, 6);
-    scene.add(light2);
-
-    const ambient = new THREE.AmbientLight(0x0b1120, 0.4);
-    scene.add(ambient);
-
-    // Central "lead engine" object
-    const coreGeometry = new THREE.IcosahedronGeometry(1.6, 1);
-    const coreMaterial = new THREE.MeshStandardMaterial({
-      color: 0x0ea5e9,
-      metalness: 0.7,
-      roughness: 0.25,
-      emissive: 0x0f172a,
-      emissiveIntensity: 0.6
-    });
-    const coreMesh = new THREE.Mesh(coreGeometry, coreMaterial);
-    scene.add(coreMesh);
-
-    // Wireframe overlay
-    const wireGeo = new THREE.IcosahedronGeometry(1.7, 1);
-    const wireMat = new THREE.MeshBasicMaterial({
-      color: 0x38bdf8,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.25
-    });
-    const wireMesh = new THREE.Mesh(wireGeo, wireMat);
-    scene.add(wireMesh);
-
-    // Swarm of "lead nodes"
-    const particleCount = 450;
-    const positions = new Float32Array(particleCount * 3);
-    const speeds = new Float32Array(particleCount);
-
-    for (let i = 0; i < particleCount; i++) {
-      const radius = 4 + Math.random() * 9;
-      const angle = Math.random() * Math.PI * 2;
-      const height = (Math.random() - 0.5) * 6;
-
-      positions[i * 3 + 0] = Math.cos(angle) * radius;
-      positions[i * 3 + 1] = height;
-      positions[i * 3 + 2] = Math.sin(angle) * radius;
-
-      speeds[i] = 0.0008 + Math.random() * 0.0018;
-    }
-
-    const particleGeometry = new THREE.BufferGeometry();
-    particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-    const particleMaterial = new THREE.PointsMaterial({
-      color: 0x7dd3fc,
-      size: 0.05,
-      sizeAttenuation: true,
-      transparent: true,
-      opacity: 0.9
-    });
-
-    const particles = new THREE.Points(particleGeometry, particleMaterial);
-    scene.add(particles);
-
-    // Scroll-based interaction
-    let scrollProgress = 0;
-
-    function updateScrollProgress() {
-      const scrollTop = window.scrollY || window.pageYOffset;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      scrollProgress = docHeight > 0 ? scrollTop / docHeight : 0;
-    }
-
-    window.addEventListener('scroll', updateScrollProgress, { passive: true });
-    updateScrollProgress();
-
-    // Mouse parallax
-    let mouseX = 0;
-    let mouseY = 0;
-
-    window.addEventListener('mousemove', (event) => {
-      const x = (event.clientX / window.innerWidth) * 2 - 1;
-      const y = (event.clientY / window.innerHeight) * 2 - 1;
-      mouseX = x;
-      mouseY = y;
-    });
-
-    // Animation loop
-    const clock = new THREE.Clock();
-
-    function animate() {
-      requestAnimationFrame(animate);
-
-      const elapsed = clock.getElapsedTime();
-
-      coreMesh.rotation.x = elapsed * 0.18;
-      coreMesh.rotation.y = elapsed * 0.24;
-      wireMesh.rotation.x = -elapsed * 0.12;
-      wireMesh.rotation.y = elapsed * 0.16;
-
-      // Animate particles in circular orbits and small noise
-      const posAttr = particleGeometry.getAttribute('position');
-      for (let i = 0; i < particleCount; i++) {
-        const x = posAttr.getX(i);
-        const z = posAttr.getZ(i);
-        const radius = Math.sqrt(x * x + z * z) || 1;
-        const angle = elapsed * speeds[i] * 180;
-
-        const newX = Math.cos(angle) * radius;
-        const newZ = Math.sin(angle) * radius;
-
-        posAttr.setX(i, newX);
-        posAttr.setZ(i, newZ);
-
-        const baseY = posAttr.getY(i);
-        posAttr.setY(i, baseY + Math.sin(elapsed * 0.3 + i * 0.15) * 0.001);
-      }
-      posAttr.needsUpdate = true;
-
-      // Scroll → camera path (slight dolly + tilt)
-      const targetZ = 9 - scrollProgress * 3.5;
-      const targetY = scrollProgress * 1.4 - 0.4;
-      const targetX = mouseX * 0.6;
-
-      camera.position.z += (targetZ - camera.position.z) * 0.04;
-      camera.position.y += (targetY - camera.position.y) * 0.04;
-      camera.position.x += (targetX - camera.position.x) * 0.04;
-
-      camera.lookAt(0, 0, 0);
-
-      renderer.render(scene, camera);
-    }
-
-    animate();
-
-    // Resize handling
-    window.addEventListener('resize', () => {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-
-      renderer.setSize(width, height);
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
-    });
-
-    // ----- Scroll reveal for sections -----
-    const revealEls = document.querySelectorAll('.reveal');
-
-    function handleReveal() {
-      const triggerBottom = window.innerHeight * 0.82;
-
-      revealEls.forEach((el) => {
-        const rect = el.getBoundingClientRect();
-        if (rect.top < triggerBottom) {
-          el.classList.add('visible');
+    <script>
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            menuBtn.innerHTML = navLinks.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+        
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Testimonial Slider
+        let slideIndex = 1;
+        showSlides(slideIndex);
+        
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
         }
-      });
-    }
-
-    window.addEventListener('scroll', handleReveal, { passive: true });
-    window.addEventListener('load', handleReveal);
-
-    // ----- Payload builder + Calendly redirect -----
-    const submitBtn = document.getElementById('submit-btn');
-
-    if (submitBtn) {
-      submitBtn.addEventListener('click', function (event) {
-        event.preventDefault();
-
-        const payload = {
-          name: document.getElementById('name').value.trim(),
-          email: document.getElementById('email').value.trim(),
-          business: document.getElementById('business').value.trim(),
-          follow_up_frequency: document.getElementById('frequency').value
-        };
-
-        console.log('Sending to Make:', payload);
-
-        // Open Calendly in a new tab right away
-        window.open('https://calendly.com/utglabs/book-call', '_blank');
-
-        // Button feedback instantly
-        submitBtn.disabled = true;
-        submitBtn.innerText = 'Sending...';
-        submitBtn.style.opacity = '0.6';
-
-        fetch('https://hook.us1.make.com/897d1guu2gy1jlksxghk63s5siy95sxl', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        })
-          .then(() => {
-            submitBtn.innerText = 'Sent ✓';
-            submitBtn.style.opacity = '1';
-            submitBtn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
-            submitBtn.style.cursor = 'default';
-          })
-          .catch(() => {
-            submitBtn.innerText = 'Error — Try Again';
-            submitBtn.disabled = false;
-            submitBtn.style.opacity = '1';
-            submitBtn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
-          });
-      });
-    }
-  </script>
+        
+        function showSlides(n) {
+            let i;
+            let slides = document.getElementsByClassName("testimonial-slide");
+            let dots = document.getElementsByClassName("dot");
+            
+            if (n > slides.length) {slideIndex = 1}    
+            if (n < 1) {slideIndex = slides.length}
+            
+            for (i = 0; i < slides.length; i++) {
+                slides[i].classList.remove("active");
+            }
+            
+            for (i = 0; i < dots.length; i++) {
+                dots[i].classList.remove("active");
+            }
+            
+            slides[slideIndex-1].classList.add("active");
+            dots[slideIndex-1].classList.add("active");
+        }
+        
+        // Auto slide change
+        setInterval(() => {
+            slideIndex++;
+            if (slideIndex > document.getElementsByClassName("testimonial-slide").length) {
+                slideIndex = 1;
+            }
+            showSlides(slideIndex);
+        }, 5000);
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                
+                // Close mobile menu if open
+                if (navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                    menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            });
+        });
+    </script>
+    <p style="border-radius: 8px; text-align: center; font-size: 12px; color: #fff; margin-top: 16px;position: fixed; left: 8px; bottom: 8px; z-index: 10; background: rgba(0, 0, 0, 0.8); padding: 4px 8px;">
+        Made with <a href="https://enzostvs-deepsite.hf.space" style="color: #fff;" target="_blank">DeepSite</a>
+        <img src="https://enzostvs-deepsite.hf.space/logo.svg" alt="DeepSite Logo" style="width: 16px; height: 16px; vertical-align: middle;">
+    </p>
 </body>
 </html>
